@@ -11,3 +11,4 @@ media/css/*.r*.css
 *.egg-info
 dist/
 example/static
+build/
