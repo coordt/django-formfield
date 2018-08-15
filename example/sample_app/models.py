@@ -30,7 +30,7 @@ class PersonMetaForm(forms.Form):
     age = forms.IntegerField()
     sex = forms.ChoiceField(required=False, choices=((1, 'male'), (2, 'female')))
     name = forms.CharField()
-    date = forms.DateTimeField(required=False)
+    date = forms.DateTimeField(required=False, widget=forms.DateTimeInput(attrs={'type': 'datetime-local'}))
 
     subform = FormField(SubPersonMetaForm)
 

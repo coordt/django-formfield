@@ -1,0 +1,5 @@
+<ul class="formfield">{% for widget in widget.subwidgets -%}
+    <li class="formfield-field">
+        {{widget.label}}{% include widget.template_name %}{{widget.help_text}}
+    </li>{%- endfor %}
+</ul>
