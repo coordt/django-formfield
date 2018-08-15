@@ -8,7 +8,7 @@ class FormFieldWidget(forms.MultiWidget):
     """
     This widget will render each field found in the supplied form.
     """
-    template_name = 'formfield.html'
+    template_name = 'django/forms/widgets/formfield.html'
 
     def __init__(self, fields, attrs=None):
         self.fields = fields
