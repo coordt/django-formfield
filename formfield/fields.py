@@ -94,6 +94,7 @@ class FormField(forms.MultiValueField):
         if data_list:
             return dict(
                 (f.name, data_list[i]) for i, f in enumerate(self.form))
+
         return data
 
     def clean(self, value):
@@ -104,7 +105,17 @@ class FormField(forms.MultiValueField):
             raise ValidationError(
                 'Error found in Form Field: Nothing to validate')
 
-        data = dict((bf.name, value[i]) for i, bf in enumerate(self.form))
+        if isinstance(value, dict):
+            # MultiValueField iterates back through each field. A nested FormField
+            # Will get called twice: once for the parent form and once from the superclass
+            # The second time, the value is a dict, and needs to be re-converted to
+            # avoid errors
+            data = value
+            value_list = [data[x.name] for x in self.form]
+            value = value_list
+        else:
+            data = dict((bf.name, value[i]) for i, bf in enumerate(self.form))
+
         self.form = form = self.form.__class__(data)
         if not form.is_valid():
             error_dict = list(form.errors.items())
@@ -134,7 +145,7 @@ class ModelFormField(JSONField):
     def formfield(self, form_class=FormField, **kwargs):
         # Need to supply form to FormField
         return super(ModelFormField, self).formfield(form_class=form_class,
-            form=self.form, **kwargs)
+                                                     form=self.form, **kwargs)
 
 try:
     from south.modelsinspector import add_introspection_rules
