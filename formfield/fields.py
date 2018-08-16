@@ -26,8 +26,16 @@ class JSONField(models.TextField):
 
         super(JSONField, self).__init__(*args, **kwargs)
 
-    def to_python(self, value):
+    def from_db_value(self, value, *args, **kwargs):
+        if isinstance(value, six.string_types):
+            try:
+                return json.loads(value, **self.load_kwargs)
+            except ValueError:
+                pass
 
+        return value
+
+    def to_python(self, value):
         if isinstance(value, six.string_types):
             try:
                 return json.loads(value, **self.load_kwargs)
@@ -37,7 +45,6 @@ class JSONField(models.TextField):
         return value
 
     def get_db_prep_value(self, value, *args, **kwargs):
-
         if isinstance(value, six.string_types):
             return value
 
