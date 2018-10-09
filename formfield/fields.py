@@ -58,7 +58,7 @@ class JSONField(models.TextField):
 class FormField(forms.MultiValueField):
     """The form field we can use in forms"""
 
-    def __init__(self, form, **kwargs):
+    def __init__(self, form, *args, **kwargs):
         import inspect
         if inspect.isclass(form) and issubclass(form, forms.Form):
             form_class = form
@@ -82,7 +82,8 @@ class FormField(forms.MultiValueField):
 
         self.max_length = kwargs.pop('max_length', None)
 
-        super(FormField, self).__init__(**kwargs)
+        fields = []
+        super(FormField, self).__init__(fields, *args, **kwargs)
 
         self.fields = [f.field for f in self.form]
 
@@ -146,10 +147,3 @@ class ModelFormField(JSONField):
         # Need to supply form to FormField
         return super(ModelFormField, self).formfield(form_class=form_class,
                                                      form=self.form, **kwargs)
-
-try:
-    from south.modelsinspector import add_introspection_rules
-    add_introspection_rules([], ["^formfield\.fields\.JSONField"])
-    add_introspection_rules([], ["^formfield\.fields\.ModelFormField"])
-except ImportError:
-    pass
