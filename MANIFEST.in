@@ -1,5 +1,6 @@
 recursive-include doc_src *
 recursive-include docs *
+recursive-include formfield *.html *.png *.gif *js *.css *jpg *jpeg *svg *py
 
 include LICENSE
 include README
